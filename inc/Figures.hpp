@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 namespace chess{
     class Possibility{
     private:
@@ -7,7 +8,7 @@ namespace chess{
         short m_y;
         sf::CircleShape m_circle;
     public:
-        Possibility(short& x, short& y){
+        Possibility(short x, short y){
             m_x = x;
             m_y = y;
             m_circle.setRadius(m_size);
@@ -18,7 +19,13 @@ namespace chess{
         sf::CircleShape Get_piece(){
             return m_circle;
         }
+        void Set_coord(short x, short y){
+            m_x = x;
+            m_y = y;
+            m_circle.setPosition(210 + m_x * 100,110 + m_y * 100);
+        }
     };
+
     class Figures{
     private:
         // 0 - чёрные, 1 - белые
@@ -30,6 +37,7 @@ namespace chess{
         short m_x;
         short m_y;
     public:
+        Figures(){};
         Figures(bool& color, short& x, short& y){
             m_color = color;
             m_x = x;
@@ -41,14 +49,13 @@ namespace chess{
         short Get_x(){
             return m_x;
         }
-        void Set_x(short& x){
+        void Set_coord(short x, short y){
             m_x = x;
+            m_y = y;
+            m_visual.setPosition(200 + m_x * 100,100 + m_y * 100);
         }
         short Get_y(){
             return m_y;
-        }
-        void Set_y(short& y){
-            m_y = y;
         }
         bool Get_color(){
             return m_color;
@@ -62,7 +69,7 @@ namespace chess{
     private:
         sf::Texture m_image;
     public:
-        Bishop(bool& color, short& x, short& y) : Figures(color, x, y) {
+        Bishop(bool color, short x, short y) : Figures(color, x, y) {
             if (color) {
                 m_image.loadFromFile("../res/images/bishop1.png");
             } else {
@@ -78,7 +85,7 @@ namespace chess{
     private:
         sf::Texture m_image;
     public:
-        Horse(bool& color, short& x, short& y) : Figures(color, x, y){
+        Horse(bool color, short x, short y) : Figures(color, x, y){
             if (color){
                 m_image.loadFromFile("../res/images/horse1.png");
             }
@@ -92,7 +99,7 @@ namespace chess{
     private:
         sf::Texture m_image;
     public:
-        Queen(bool& color, short& x, short& y) : Figures(color, x, y){
+        Queen(bool color, short x, short y) : Figures(color, x, y){
             if (color){
                 m_image.loadFromFile("../res/images/queen1.png");
             }
@@ -106,7 +113,7 @@ namespace chess{
     private:
         sf::Texture m_image;
     public:
-        Rook(bool& color, short& x, short& y) : Figures(color, x, y){
+        Rook(bool color, short x, short y) : Figures(color, x, y){
             if (color){
                 m_image.loadFromFile("../res/images/rook1.png");
             }
@@ -120,7 +127,7 @@ namespace chess{
     private:
         sf::Texture m_image;
     public:
-        King(bool& color, short& x, short& y) : Figures(color, x, y){
+        King(bool color, short x, short y) : Figures(color, x, y){
             if (color){
                 m_image.loadFromFile("../res/images/king1.png");
             }
@@ -134,7 +141,7 @@ namespace chess{
     private:
         sf::Texture m_image;
     public:
-        Pawn(bool& color, short& x, short& y) : Figures(color, x, y){
+        Pawn(bool color, short x, short y) : Figures(color, x, y){
             if (color){
                 m_image.loadFromFile("../res/images/pawn1.png");
             }
