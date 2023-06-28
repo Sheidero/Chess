@@ -1,0 +1,3 @@
+/Users/artemgavrikov/GitHub/The_Chess/cmake-build-debug/CMakeFiles/The_Chess.dir
+/Users/artemgavrikov/GitHub/The_Chess/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/artemgavrikov/GitHub/The_Chess/cmake-build-debug/CMakeFiles/rebuild_cache.dir
