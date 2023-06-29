@@ -9,72 +9,73 @@
 
 
 int main() {
-    chess::Figures figures[8][8];
+    std::vector<std::vector<chess::Figures*>> figures(8, std::vector<chess::Figures*>(8));
+
     chess::Rook rookb1(false,0,0);
-    figures[0][0] = rookb1;
+    figures[0][0] = &rookb1;
     chess::Horse horseb1(false,1,0);
-    figures[0][1] = horseb1;
+    figures[0][1] = &horseb1;
     chess::Bishop bishopb1(false,2,0);
-    figures[0][2] = bishopb1;
+    figures[0][2] = &bishopb1;
     chess::Queen queenb(false,3,0);
-    figures[0][3] = queenb;
+    figures[0][3] = &queenb;
     chess::King kingb(false,4,0);
-    figures[0][4] = kingb;
+    figures[0][4] = &kingb;
     chess::Bishop bishopb2(false,5,0);
-    figures[0][5] = bishopb2;
+    figures[0][5] = &bishopb2;
     chess::Horse horseb2(false,6,0);
-    figures[0][6] = horseb2;
+    figures[0][6] = &horseb2;
     chess::Rook rookb2(false,7,0);
-    figures[0][7] = rookb2;
+    figures[0][7] = &rookb2;
     chess::Pawn pb1(false, 0, 1);
-    figures[1][0] = pb1;
+    figures[1][0] = &pb1;
     chess::Pawn pb2(false, 1, 1);
-    figures[1][1] = pb2;
+    figures[1][1] = &pb2;
     chess::Pawn pb3(false, 2, 1);
-    figures[1][2] = pb3;
+    figures[1][2] = &pb3;
     chess::Pawn pb4(false, 3, 1);
-    figures[1][3] = pb4;
+    figures[1][3] = &pb4;
     chess::Pawn pb5(false, 4, 1);
-    figures[1][4] = pb5;
+    figures[1][4] = &pb5;
     chess::Pawn pb6(false, 5, 1);
-    figures[1][5] = pb6;
+    figures[1][5] = &pb6;
     chess::Pawn pb7(false, 6, 1);
-    figures[1][6] = pb7;
+    figures[1][6] = &pb7;
     chess::Pawn pb8(false, 7, 1);
-    figures[1][7] = pb8;
+    figures[1][7] = &pb8;
 
     chess::Pawn pw1(true, 0, 6);
-    figures[6][0] = pw1;
+    figures[6][0] = &pw1;
     chess::Pawn pw2(true, 1, 6);
-    figures[6][1] = pw2;
+    figures[6][1] = &pw2;
     chess::Pawn pw3(true, 2, 6);
-    figures[6][2] = pw3;
+    figures[6][2] = &pw3;
     chess::Pawn pw4(true, 3, 6);
-    figures[6][3] = pw4;
+    figures[6][3] = &pw4;
     chess::Pawn pw5(true, 4, 6);
-    figures[6][4] = pw5;
+    figures[6][4] = &pw5;
     chess::Pawn pw6(true, 5, 6);
-    figures[6][5] = pw6;
+    figures[6][5] = &pw6;
     chess::Pawn pw7(true, 6, 6);
-    figures[6][6] = pw7;
+    figures[6][6] = &pw7;
     chess::Pawn pw8(true, 7, 6);
-    figures[6][7] = pw8;
+    figures[6][7] = &pw8;
     chess::Rook rookw1(true,0,7);
-    figures[7][0] = rookw1;
+    figures[7][0] = &rookw1;
     chess::Horse horsew1(true,1,7);
-    figures[7][1] = horsew1;
+    figures[7][1] = &horsew1;
     chess::Bishop bishopw1(true,2,7);
-    figures[7][2] = bishopw1;
+    figures[7][2] = &bishopw1;
     chess::Queen queenw(true,3,7);
-    figures[7][3] = queenw;
+    figures[7][3] = &queenw;
     chess::King kingw(true,4,7);
-    figures[7][4] = kingw;
+    figures[7][4] = &kingw;
     chess::Bishop bishopw2(true,5,7);
-    figures[7][5] = bishopw2;
+    figures[7][5] = &bishopw2;
     chess::Horse horsew2(true,6,7);
-    figures[7][6] = horsew2;
+    figures[7][6] = &horsew2;
     chess::Rook rookw2(true,7,7);
-    figures[7][7] = rookw2;
+    figures[7][7] = &rookw2;
 
     // 0 - пусто, 1 - Короли, 2 - Ферзи, 3 - Ладьи, 4 - Слоны, 5 - Кони, 6 - пешки
     short situation[8][8] = {{-3,-5,-4,-2,-1,-4,-5,-3},\
@@ -96,7 +97,7 @@ int main() {
 
 
     chess::Board deck;
-    std::vector<chess::Possibility> possibility = bishopb1.can_move();
+    std::vector<chess::Possibility> possibility = figures[0][4]->can_move();
     while (window.isOpen())
     {
         sf::Event event;
@@ -111,16 +112,12 @@ int main() {
         deck.draw(window);
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
-                window.draw(figures[i][j].Get_piece());
+                if (figures[i][j] != nullptr)
+                    window.draw(figures[i][j]->Get_piece());
             }
         }
-        for (int i = 0; i < sizeof possibility; i ++) {
-            try{
-                window.draw(possibility[i].Get_piece());
-            }
-            catch(...){
-
-            }
+        for (int i = 0; i < possibility.size(); i ++) {
+            window.draw(possibility[i].Get_piece());
         }
         window.display();
     }

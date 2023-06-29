@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
+#include "../inc/log.hpp"
 namespace chess{
     class Possibility{
     private:
@@ -29,14 +30,15 @@ namespace chess{
 
     class Figures{
     private:
-        // 0 - чёрные, 1 - белые
-        bool m_color;
         // 1 - Короли, 2 - Ферзи, 3 - Ладьи, 4 - Слоны, 5 - Кони, 6 - пешки
         char m_type;
     protected:
+        // 0 - чёрные, 1 - белые
+        bool m_color;
         sf::Sprite m_visual;
         short m_x;
         short m_y;
+        // 27
         std::vector<Possibility> m_possibility;
     public:
         Figures(){};
@@ -84,43 +86,35 @@ namespace chess{
             short x,y;
             x = m_x -1;
             y = m_y -1;
-            Possibility circle(x,y);
             while (x>=0 and y >=0){
-                m_possibility.push_back(circle);
+                m_possibility.push_back(Possibility(x,y));
                 x--;
                 y--;
-                circle.Set_coord(x,y);
             }
             x = m_x -1;
             y = m_y + 1;
-            circle.Set_coord(x,y);
             while (x>=0 and y <8){
-                m_possibility.push_back(circle);
+                m_possibility.push_back(Possibility(x,y));
                 x--;
                 y++;
-                circle.Set_coord(x,y);
             }
 
             x = m_x + 1;
             y = m_y - 1;
-            circle.Set_coord(x,y);
             while (x<8 and y >=0){
-                m_possibility.push_back(circle);
+                m_possibility.push_back(Possibility(x,y));
                 x++;
                 y--;
-                circle.Set_coord(x,y);
             }
 
             x = m_x + 1;
             y = m_y + 1;
-            circle.Set_coord(x,y);
             while (x<8 and y <8){
-                m_possibility.push_back(circle);
+                m_possibility.push_back(Possibility(x,y));
                 x++;
                 y++;
-                circle.Set_coord(x,y);
             }
-            std::cout << sizeof m_possibility << std::endl;
+            std::cout << m_possibility.size() << std::endl;
             return m_possibility;
         }
     };
@@ -141,14 +135,39 @@ namespace chess{
             short x,y;
             x = m_x;
             y = m_y;
-            Possibility circle(x,y);
             if (x + 2 < 8){
                 if (y + 1 < 8) {
-                    circle.Set_coord(x + 2, y + 1);
-                    m_possibility.push_back(circle);
+                    m_possibility.push_back(Possibility(x+2,y+1));
                 }
-
+                if (y - 1 >= 0){
+                    m_possibility.push_back(Possibility(x+2,y-1));
+                }
             }
+            if (x - 2 >= 0) {
+                if (y + 1 < 8) {
+                    m_possibility.push_back(Possibility(x-2,y+1));
+                }
+                if (y - 1 >= 0) {
+                    m_possibility.push_back(Possibility(x-2,y-1));
+                }
+            }
+            if (y + 2 < 8) {
+                if (x + 1 < 8) {
+                    m_possibility.push_back(Possibility(x+1,y+2));
+                }
+                if (x - 1 >= 0) {
+                    m_possibility.push_back(Possibility(x-1,y+2));
+                }
+            }
+            if (y - 2 < 8) {
+                if (x + 1 < 8) {
+                    m_possibility.push_back(Possibility(x+1,y-2));
+                }
+                if (x - 1 >= 0) {
+                    m_possibility.push_back(Possibility(x-1,y-2));
+                }
+            }
+            return m_possibility;
         }
     };
     class Queen: virtual public Figures{
@@ -164,6 +183,64 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
+        std::vector<Possibility> can_move() override{
+            short x,y;
+            x = m_x + 1;
+            y = m_y;
+            while (x < 8){
+                m_possibility.push_back(Possibility(x,y));
+                x++;
+            }
+            x = m_x - 1;
+            y = m_y;
+            while (x >= 0){
+                m_possibility.push_back(Possibility(x,y));
+                x--;
+            }
+            x = m_x;
+            y = m_y + 1;
+            while (y < 8){
+                m_possibility.push_back(Possibility(x,y));
+                y++;
+            }
+            x = m_x;
+            y = m_y - 1;
+            while (y >= 0){
+                m_possibility.push_back(Possibility(x,y));
+                y--;
+            }
+            x = m_x -1;
+            y = m_y -1;
+            while (x>=0 and y >=0){
+                m_possibility.push_back(Possibility(x,y));
+                x--;
+                y--;
+            }
+            x = m_x -1;
+            y = m_y + 1;
+            while (x>=0 and y <8){
+                m_possibility.push_back(Possibility(x,y));
+                x--;
+                y++;
+            }
+
+            x = m_x + 1;
+            y = m_y - 1;
+            while (x<8 and y >=0){
+                m_possibility.push_back(Possibility(x,y));
+                x++;
+                y--;
+            }
+
+            x = m_x + 1;
+            y = m_y + 1;
+            while (x<8 and y <8){
+                m_possibility.push_back(Possibility(x,y));
+                x++;
+                y++;
+            }
+            return m_possibility;
+        }
     };
     class Rook: virtual public Figures{
     private:
@@ -177,6 +254,34 @@ namespace chess{
                 m_image.loadFromFile("../res/images/rook.png");
             }
             m_visual.setTexture(m_image);
+        }
+        std::vector<Possibility> can_move() override{
+            short x,y;
+            x = m_x + 1;
+            y = m_y;
+            while (x < 8){
+                m_possibility.push_back(Possibility(x,y));
+                x++;
+            }
+            x = m_x - 1;
+            y = m_y;
+            while (x >= 0){
+                m_possibility.push_back(Possibility(x,y));
+                x--;
+            }
+            x = m_x;
+            y = m_y + 1;
+            while (y < 8){
+                m_possibility.push_back(Possibility(x,y));
+                y++;
+            }
+            x = m_x;
+            y = m_y - 1;
+            while (y >= 0){
+                m_possibility.push_back(Possibility(x,y));
+                y--;
+            }
+            return m_possibility;
         }
     };
     class King: virtual public Figures{
@@ -192,6 +297,36 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
+        std::vector<Possibility> can_move() override{
+            short x,y;
+            x = m_x;
+            y = m_y;
+            if (x + 1 < 8){
+                m_possibility.push_back(Possibility(x+1,y));
+            }
+            if (x + 1 < 8 and y +1 < 8){
+                m_possibility.push_back(Possibility(x+1,y+1));
+            }
+            if (y + 1 >= 0){
+                m_possibility.push_back(Possibility(x,y+1));
+            }
+            if (x - 1 >= 0 and y+1 < 8){
+                m_possibility.push_back(Possibility(x-1,y +1));
+            }
+            if (x - 1 >= 0){
+                m_possibility.push_back(Possibility(x-1,y));
+            }
+            if (x - 1 >=0 and y -1 >= 0){
+                m_possibility.push_back(Possibility(x-1,y-1));
+            }
+            if (y - 1 >= 0){
+                m_possibility.push_back(Possibility(x,y-1));
+            }
+            if (y-1 >= 0 and x + 1 < 8){
+                m_possibility.push_back(Possibility(x+1,y));
+            }
+            return m_possibility;
+        }
     };
     class Pawn: virtual public Figures{
     private:
@@ -205,6 +340,28 @@ namespace chess{
                 m_image.loadFromFile("../res/images/pawn.png");
             }
             m_visual.setTexture(m_image);
+        }
+        std::vector<Possibility> can_move() override{
+            short x,y;
+            x = m_x;
+            y = m_y;
+            if (not(m_color)){
+                if (y == 1){
+                    m_possibility.push_back(Possibility(x,y+2));
+                }
+                if (y < 8){
+                    m_possibility.push_back((Possibility(x,y+1)));
+                }
+            }
+            if (m_color){
+                if (y == 6){
+                    m_possibility.push_back(Possibility(x,y-2));
+                }
+                if (y >= 0){
+                    m_possibility.push_back((Possibility(x,y-1)));
+                }
+            }
+            return m_possibility;
         }
     };
 }
