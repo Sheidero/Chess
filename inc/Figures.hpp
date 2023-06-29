@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <vector>
 namespace chess{
     class Possibility{
     private:
@@ -36,6 +37,7 @@ namespace chess{
         sf::Sprite m_visual;
         short m_x;
         short m_y;
+        std::vector<Possibility> m_possibility;
     public:
         Figures(){};
         Figures(bool& color, short& x, short& y){
@@ -63,9 +65,10 @@ namespace chess{
         sf::Sprite Get_piece(){
             return m_visual;
         }
+        virtual std::vector<Possibility> can_move(){};
     };
 
-    class Bishop: public Figures{
+    class Bishop: virtual public Figures{
     private:
         sf::Texture m_image;
     public:
@@ -77,11 +80,51 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
-        bool can_move(){
-            return 1;
+        std::vector<Possibility> can_move() override{
+            short x,y;
+            x = m_x -1;
+            y = m_y -1;
+            Possibility circle(x,y);
+            while (x>=0 and y >=0){
+                m_possibility.push_back(circle);
+                x--;
+                y--;
+                circle.Set_coord(x,y);
+            }
+            x = m_x -1;
+            y = m_y + 1;
+            circle.Set_coord(x,y);
+            while (x>=0 and y <8){
+                m_possibility.push_back(circle);
+                x--;
+                y++;
+                circle.Set_coord(x,y);
+            }
+
+            x = m_x + 1;
+            y = m_y - 1;
+            circle.Set_coord(x,y);
+            while (x<8 and y >=0){
+                m_possibility.push_back(circle);
+                x++;
+                y--;
+                circle.Set_coord(x,y);
+            }
+
+            x = m_x + 1;
+            y = m_y + 1;
+            circle.Set_coord(x,y);
+            while (x<8 and y <8){
+                m_possibility.push_back(circle);
+                x++;
+                y++;
+                circle.Set_coord(x,y);
+            }
+            std::cout << sizeof m_possibility << std::endl;
+            return m_possibility;
         }
     };
-    class Horse: public Figures{
+    class Horse: virtual public Figures{
     private:
         sf::Texture m_image;
     public:
@@ -94,8 +137,21 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
+        std::vector<Possibility> can_move() override{
+            short x,y;
+            x = m_x;
+            y = m_y;
+            Possibility circle(x,y);
+            if (x + 2 < 8){
+                if (y + 1 < 8) {
+                    circle.Set_coord(x + 2, y + 1);
+                    m_possibility.push_back(circle);
+                }
+
+            }
+        }
     };
-    class Queen: public Figures{
+    class Queen: virtual public Figures{
     private:
         sf::Texture m_image;
     public:
@@ -109,7 +165,7 @@ namespace chess{
             m_visual.setTexture(m_image);
         }
     };
-    class Rook: public Figures{
+    class Rook: virtual public Figures{
     private:
         sf::Texture m_image;
     public:
@@ -123,7 +179,7 @@ namespace chess{
             m_visual.setTexture(m_image);
         }
     };
-    class King: public Figures{
+    class King: virtual public Figures{
     private:
         sf::Texture m_image;
     public:
@@ -137,7 +193,7 @@ namespace chess{
             m_visual.setTexture(m_image);
         }
     };
-    class Pawn: public Figures{
+    class Pawn: virtual public Figures{
     private:
         sf::Texture m_image;
     public:

@@ -95,8 +95,8 @@ int main() {
     sf::RenderWindow window(sf::VideoMode(2560, 1600), "The Chess");
 
 
-    chess::Possibility circle(0, 1);
     chess::Board deck;
+    std::vector<chess::Possibility> possibility = bishopb1.can_move();
     while (window.isOpen())
     {
         sf::Event event;
@@ -108,16 +108,20 @@ int main() {
 
         window.clear();
 
-
         deck.draw(window);
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
                 window.draw(figures[i][j].Get_piece());
             }
         }
-        window.draw(figures[0][0].Get_piece());
-        window.draw(pb1.Get_piece());
-        window.draw(circle.Get_piece());
+        for (int i = 0; i < sizeof possibility; i ++) {
+            try{
+                window.draw(possibility[i].Get_piece());
+            }
+            catch(...){
+
+            }
+        }
         window.display();
     }
     Log::Write(LogLevel::DEBUG, "Program is ended");

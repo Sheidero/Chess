@@ -1,20 +1,8 @@
 # ninja log v5
-1	217	1687952217425373498	build.ninja	3ba3fa1d1554d465
-3	391	1687952098152788205	CMakeFiles/The_Chess.dir/src/game.cpp.o	7ca1d248fee1129d
-2	486	1687981827703668978	CMakeFiles/The_Chess.dir/main.cpp.o	fbe1eeaeb9335ec1
-3	412	1687952098173048100	CMakeFiles/The_Chess.dir/src/log.cpp.o	d85b340916420cbb
-6	480	1687980520668618820	CMakeFiles/The_Chess.dir/src/Figures.cpp.o	97c2496a4592a57e
+584	704	1688048016554932351	The_Chess	4fbf07bbfa7eb266
 3	376	1687953634938354348	CMakeFiles/The_Chess.dir/src/Board.cpp.o	4098baad67145508
-486	530	1687981827750202691	The_Chess	4fbf07bbfa7eb266
-3	468	1687981970096062075	CMakeFiles/The_Chess.dir/main.cpp.o	fbe1eeaeb9335ec1
-468	512	1687981970142062628	The_Chess	4fbf07bbfa7eb266
-4	504	1687982009367025090	CMakeFiles/The_Chess.dir/main.cpp.o	fbe1eeaeb9335ec1
-504	547	1687982009412018781	The_Chess	4fbf07bbfa7eb266
-3	488	1687982140511228047	CMakeFiles/The_Chess.dir/main.cpp.o	fbe1eeaeb9335ec1
-488	533	1687982140559887151	The_Chess	4fbf07bbfa7eb266
-3	349	1687982166692283149	CMakeFiles/The_Chess.dir/src/Figures.cpp.o	97c2496a4592a57e
-2	428	1687982166771688370	CMakeFiles/The_Chess.dir/main.cpp.o	fbe1eeaeb9335ec1
-428	468	1687982166813566016	The_Chess	4fbf07bbfa7eb266
-6	470	1687982480132582846	CMakeFiles/The_Chess.dir/src/Figures.cpp.o	97c2496a4592a57e
-5	552	1687982480216770962	CMakeFiles/The_Chess.dir/main.cpp.o	fbe1eeaeb9335ec1
-552	601	1687982480268137638	The_Chess	4fbf07bbfa7eb266
+3	391	1687952098152788205	CMakeFiles/The_Chess.dir/src/game.cpp.o	7ca1d248fee1129d
+3	584	1688048016432834517	CMakeFiles/The_Chess.dir/main.cpp.o	fbe1eeaeb9335ec1
+4	467	1688048016314817210	CMakeFiles/The_Chess.dir/src/Figures.cpp.o	97c2496a4592a57e
+3	412	1687952098173048100	CMakeFiles/The_Chess.dir/src/log.cpp.o	d85b340916420cbb
+1	217	1687952217425373498	build.ninja	3ba3fa1d1554d465
