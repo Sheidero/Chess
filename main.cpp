@@ -135,12 +135,20 @@ int main() {
                                     }
                                 }
                                 if (choose){
-                                    figures[py][px] = cur_piece;
                                     possibility = {};
                                     figures[cur_piece->Get_y()][cur_piece->Get_x()] = nullptr;
                                     situation[py][px] = cur_piece->Get_type();
-                                    std::cout << cur_piece->Get_type() << std::endl;
                                     situation[cur_piece->Get_y()][cur_piece->Get_x()] = 0;
+                                    if ((py == 0 or py == 7) and abs(situation[py][px]) == 6){
+                                        if (py == 0){
+                                            cur_piece = new chess::Queen(true, px, 0);
+                                        }
+                                        else{
+                                            cur_piece = new chess::Queen(false, px, 7);
+                                        }
+                                        situation[py][px] = cur_piece->Get_type();
+                                    }
+                                    figures[py][px] = cur_piece;
                                     cur_piece->Set_coord(px,py);
 
                                     flag++;
