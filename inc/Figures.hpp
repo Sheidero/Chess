@@ -35,10 +35,9 @@ namespace chess{
     };
 
     class Figures{
-    private:
-        // 1 - Короли, 2 - Ферзи, 3 - Ладьи, 4 - Слоны, 5 - Кони, 6 - пешки
-        char m_type;
     protected:
+        // 1 - Короли, 2 - Ферзи, 3 - Ладьи, 4 - Слоны, 5 - Кони, 6 - пешки, - чёрные, 0 - ничего
+        short m_type;
         // 0 - чёрные, 1 - белые
         bool m_color;
         sf::Sprite m_visual;
@@ -81,6 +80,9 @@ namespace chess{
         bool Get_color(){
             return m_color;
         }
+        short Get_type(){
+            return m_type;
+        }
         sf::Sprite Get_piece(){
             return m_visual;
         }
@@ -93,8 +95,10 @@ namespace chess{
     public:
         Bishop(bool color, short x, short y) : Figures(color, x, y) {
             if (color) {
+                m_type = 4;
                 m_image.loadFromFile("../res/images/bishop1.png");
             } else {
+                m_type = -4;
                 m_image.loadFromFile("../res/images/bishop.png");
             }
             m_visual.setTexture(m_image);
@@ -160,14 +164,17 @@ namespace chess{
     public:
         Horse(bool color, short x, short y) : Figures(color, x, y){
             if (color){
+                m_type = 5;
                 m_image.loadFromFile("../res/images/horse1.png");
             }
             else {
+                m_type = -5;
                 m_image.loadFromFile("../res/images/horse.png");
             }
             m_visual.setTexture(m_image);
         }
         std::vector<Possibility> can_move(short situation[8][8]) override{
+            m_possibility.clear();
             short x,y;
             x = m_x;
             y = m_y;
@@ -212,9 +219,11 @@ namespace chess{
     public:
         Queen(bool color, short x, short y) : Figures(color, x, y){
             if (color){
+                m_type = 2;
                 m_image.loadFromFile("../res/images/queen1.png");
             }
             else {
+                m_type = -2;
                 m_image.loadFromFile("../res/images/queen.png");
             }
             m_visual.setTexture(m_image);
@@ -325,10 +334,13 @@ namespace chess{
         sf::Texture m_image;
     public:
         Rook(bool color, short x, short y) : Figures(color, x, y){
+            m_possibility.clear();
             if (color){
+                m_type = 3;
                 m_image.loadFromFile("../res/images/rook1.png");
             }
             else {
+                m_type = -3;
                 m_image.loadFromFile("../res/images/rook.png");
             }
             m_visual.setTexture(m_image);
@@ -388,14 +400,17 @@ namespace chess{
     public:
         King(bool color, short x, short y) : Figures(color, x, y){
             if (color){
+                m_type = 1;
                 m_image.loadFromFile("../res/images/king1.png");
             }
             else {
+                m_type = -1;
                 m_image.loadFromFile("../res/images/king.png");
             }
             m_visual.setTexture(m_image);
         }
         std::vector<Possibility> can_move(short situation[8][8]) override{
+            m_possibility.clear();
             short x,y;
             x = m_x;
             y = m_y;
@@ -440,31 +455,61 @@ namespace chess{
     public:
         Pawn(bool color, short x, short y) : Figures(color, x, y){
             if (color){
+                m_type = 6;
                 m_image.loadFromFile("../res/images/pawn1.png");
             }
             else {
+                m_type = -6;
                 m_image.loadFromFile("../res/images/pawn.png");
             }
             m_visual.setTexture(m_image);
         }
         std::vector<Possibility> can_move(short situation[8][8]) override{
-            short x,y;
+            m_possibility.clear();
+            short x, y;
             x = m_x;
             y = m_y;
-            if (not(m_color)){
-                if (y == 1){
-                    m_possibility.push_back(Possibility(x,y+2));
+            char check = place(situation[y][x], m_color);
+            if (m_color)
+            {
+                check = place(situation[y - 1][x], m_color);
+                if (y - 1 > 0 and check == 'b') {
+                    m_possibility.push_back(Possibility(x, y-1));
+                    if (y == 6 and (place(situation[y - 2][x], m_color) == 'b'))
+                    {
+                        m_possibility.push_back(Possibility(x, y - 2));
+                    }
                 }
-                if (y < 8){
-                    m_possibility.push_back((Possibility(x,y+1)));
+                check = place(situation[y - 1][x - 1], m_color);
+                if (y - 1 > 0 and x - 1 > 0 and check == 'c')
+                {
+                    m_possibility.push_back(Possibility(x - 1, y - 1));
+                }
+                check = place(situation[y - 1][x + 1], m_color);
+                if (y - 1 > 0 and x - 1 > 0 and check == 'c')
+                {
+                    m_possibility.push_back(Possibility(x + 1, y - 1));
                 }
             }
-            if (m_color){
-                if (y == 6){
-                    m_possibility.push_back(Possibility(x,y-2));
+            if (!m_color)
+            {
+                check = place(situation[y + 1][x], m_color);
+                if (y + 1 < 7 and check == 'b') {
+                    m_possibility.push_back(Possibility(x, y + 1));
+                    if (y == 1 and (place(situation[y + 2][x], m_color) == 'b'))
+                    {
+                        m_possibility.push_back(Possibility(x, y + 2));
+                    }
                 }
-                if (y >= 0){
-                    m_possibility.push_back((Possibility(x,y-1)));
+                check = place(situation[y + 1][x - 1], m_color);
+                if (y + 1 <  7 and x - 1 > 0 and check == 'c')
+                {
+                    m_possibility.push_back(Possibility(x - 1, y + 1));
+                }
+                check = place(situation[y + 1][x + 1], m_color);
+                if (y + 1 < 7 and x + 1 < 8 and check == 'c')
+                {
+                    m_possibility.push_back(Possibility(x + 1, y + 1));
                 }
             }
             return m_possibility;

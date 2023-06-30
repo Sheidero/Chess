@@ -86,7 +86,7 @@ int main() {
     {0,0,0,0,0,0,0,0},\
     {6,6,6,6,6,6,6,6},\
     {3,5,4,2,1,4,5,3}};
-    chess::can_move(situation,1,2);
+    chess::hodi(situation);
     Log::SetLogPath("log.txt");
     Log::Write(LogLevel::INFO, "Hi, world!");
     Log::Write(LogLevel::ERROR, "No  errors");
@@ -98,18 +98,36 @@ int main() {
 
     chess::Board deck;
     std::vector<chess::Possibility> possibility = figures[0][4]->can_move(situation);
+    sf::Vector2i localPosition;
+    short px;
+    short py;
     while (window.isOpen())
     {
         sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
 
         window.clear();
-
         deck.draw(window);
+        while (window.pollEvent(event))
+        {
+            switch (event.type) {
+                // Window closed
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+                case sf::Event::MouseButtonPressed:
+                    if (event.key.code == sf::Mouse::Left){
+                        localPosition = sf::Mouse::getPosition(window);
+                        px = (localPosition.x - 200) / 100;
+                        py = (localPosition.y - 100) / 100;
+                        possibility = figures[py][px]->can_move(situation);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
                 if (figures[i][j] != nullptr)
