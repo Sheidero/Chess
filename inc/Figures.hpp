@@ -47,34 +47,15 @@ namespace chess{
         // 27
         std::vector<Possibility> m_possibility;
         char place(short el, bool color){
-            if (color){
-                if(el >0){
-                    return 'a';
-                }
-                if (el<0){
-                    return 'c';
-                }
-                std::cout << "frtg" << std::endl;
+            if (((el > 0) == color) and el != 0){
+                // фигура совпадает цветом
+                return 'a';
+            }
+            if (el == 0){
                 return 'b';
             }
-            else{
-                if (el < 0){
-                    return 'a';
-                }
-                if (el > 0){
-                    return 'c';
-                }
-                return 'b';
-            }
-//            if (((el > 0) == color) and el != 0){
-//                // фигура совпадает цветом
-//                return 'a';
-//            }
-//            if (el == 0){
-//                return 'b';
-//            }
-//            // фигура не совпадает цветом, после неё остановиться
-//            return 'c';
+            // фигура не совпадает цветом, после неё остановиться
+            return 'c';
         }
     public:
         Figures(){};
@@ -418,28 +399,36 @@ namespace chess{
             short x,y;
             x = m_x;
             y = m_y;
-            if (x + 1 < 8){
+            char check = place(situation[y][x],m_color);
+            if (x + 1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x+1,y));
             }
-            if (x + 1 < 8 and y +1 < 8){
+            check = place(situation[y][x],m_color);
+            if (x + 1 < 8 and y +1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x+1,y+1));
             }
-            if (y + 1 >= 0){
+            check = place(situation[y][x],m_color);
+            if (y + 1 >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y+1));
             }
-            if (x - 1 >= 0 and y+1 < 8){
+            check = place(situation[y][x],m_color);
+            if (x - 1 >= 0 and y+1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x-1,y +1));
             }
-            if (x - 1 >= 0){
+            check = place(situation[y][x],m_color);
+            if (x - 1 >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x-1,y));
             }
-            if (x - 1 >=0 and y -1 >= 0){
+            check = place(situation[y][x],m_color);
+            if (x - 1 >=0 and y -1 >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x-1,y-1));
             }
-            if (y - 1 >= 0){
+            check = place(situation[y][x],m_color);
+            if (y - 1 >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y-1));
             }
-            if (y-1 >= 0 and x + 1 < 8){
+            check = place(situation[y][x],m_color);
+            if (y-1 >= 0 and x + 1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x+1,y));
             }
             return m_possibility;

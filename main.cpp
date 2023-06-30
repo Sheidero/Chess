@@ -97,7 +97,7 @@ int main() {
 
 
     chess::Board deck;
-    std::vector<chess::Possibility> possibility = figures[0][3]->can_move(situation);
+    std::vector<chess::Possibility> possibility = figures[0][4]->can_move(situation);
     while (window.isOpen())
     {
         sf::Event event;
