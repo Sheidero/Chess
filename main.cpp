@@ -92,12 +92,14 @@ int main() {
     Log::Write(LogLevel::ERROR, "No  errors");
     Log::Write(LogLevel::INFO, "Congrats");
 
-
     sf::RenderWindow window(sf::VideoMode(2560, 1600), "The Chess");
 
 
     chess::Board deck;
     std::vector<chess::Possibility> possibility = figures[0][4]->can_move(situation);
+    short flag = 1;
+    bool choose;
+    chess::Figures* cur_piece;
     sf::Vector2i localPosition;
     short px;
     short py;
@@ -119,7 +121,32 @@ int main() {
                         localPosition = sf::Mouse::getPosition(window);
                         px = (localPosition.x - 200) / 100;
                         py = (localPosition.y - 100) / 100;
-                        possibility = figures[py][px]->can_move(situation);
+                        if(px >= 0 and px < 8 and py >= 0 and py < 8){
+                            if (figures[py][px] != nullptr and flag % 2 == figures[py][px]->Get_color()){
+                                possibility = figures[py][px]->can_move(situation);
+                                cur_piece = figures[py][px];
+                            }
+                            else{
+                                choose = false;
+                                for (int i = 0; i < possibility.size(); i++){
+                                    if (possibility[i].Get_x() == px and possibility[i].Get_y() == py){
+                                        choose = true;
+                                        break;
+                                    }
+                                }
+                                if (choose){
+                                    figures[py][px] = cur_piece;
+                                    possibility = {};
+                                    cur_piece->Set_coord(px,py);
+                                    figures[cur_piece->Get_y()][cur_piece->Get_x()] = nullptr;
+                                    situation[px][py] = cur_piece->Get_type();
+                                    std::cout << cur_piece->Get_type() << std::endl;
+                                    situation[cur_piece->Get_x()][cur_piece->Get_y()] = 0;
+                                    flag++;
+                                    chess::hodi(situation);
+                                }
+                            }
+                        }
                     }
                     break;
                 default:
