@@ -26,6 +26,12 @@ namespace chess{
             m_y = y;
             m_circle.setPosition(210 + m_x * 100,110 + m_y * 100);
         }
+        short Get_x(){
+            return m_x;
+        }
+        short Get_y(){
+            return m_y;
+        }
     };
 
     class Figures{
@@ -40,6 +46,36 @@ namespace chess{
         short m_y;
         // 27
         std::vector<Possibility> m_possibility;
+        char place(short el, bool color){
+            if (color){
+                if(el >0){
+                    return 'a';
+                }
+                if (el<0){
+                    return 'c';
+                }
+                std::cout << "frtg" << std::endl;
+                return 'b';
+            }
+            else{
+                if (el < 0){
+                    return 'a';
+                }
+                if (el > 0){
+                    return 'c';
+                }
+                return 'b';
+            }
+//            if (((el > 0) == color) and el != 0){
+//                // фигура совпадает цветом
+//                return 'a';
+//            }
+//            if (el == 0){
+//                return 'b';
+//            }
+//            // фигура не совпадает цветом, после неё остановиться
+//            return 'c';
+        }
     public:
         Figures(){};
         Figures(bool& color, short& x, short& y){
@@ -67,7 +103,7 @@ namespace chess{
         sf::Sprite Get_piece(){
             return m_visual;
         }
-        virtual std::vector<Possibility> can_move(){};
+        virtual std::vector<Possibility> can_move(short situation[8][8]){};
     };
 
     class Bishop: virtual public Figures{
@@ -82,37 +118,56 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
-        std::vector<Possibility> can_move() override{
+        std::vector<Possibility> can_move(short situation[8][8]) override{
+            m_possibility.clear();
             short x,y;
             x = m_x -1;
             y = m_y -1;
-            while (x>=0 and y >=0){
+            char check = place(situation[y][x],m_color);
+            while (x>=0 and y >=0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if (check == 'c'){
+                    break;
+                }
                 x--;
                 y--;
+                check = place(situation[y][x],m_color);
             }
             x = m_x -1;
             y = m_y + 1;
-            while (x>=0 and y <8){
+            check = place(situation[y][x],m_color);
+            while (x>=0 and y <8 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if (check == 'c'){
+                    break;
+                }
                 x--;
                 y++;
+                check = place(situation[y][x],m_color);
             }
-
             x = m_x + 1;
             y = m_y - 1;
-            while (x<8 and y >=0){
+            check = place(situation[y][x],m_color);
+            while (x<8 and y >=0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if (check == 'c'){
+                    break;
+                }
                 x++;
                 y--;
+                check = place(situation[y][x],m_color);
             }
-
             x = m_x + 1;
             y = m_y + 1;
-            while (x<8 and y <8){
+            check = place(situation[y][x],m_color);
+            while (x<8 and y <8 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if (check == 'c'){
+                    break;
+                }
                 x++;
                 y++;
+                check = place(situation[y][x],m_color);
             }
             std::cout << m_possibility.size() << std::endl;
             return m_possibility;
@@ -131,39 +186,39 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
-        std::vector<Possibility> can_move() override{
+        std::vector<Possibility> can_move(short situation[8][8]) override{
             short x,y;
             x = m_x;
             y = m_y;
             if (x + 2 < 8){
-                if (y + 1 < 8) {
+                if (y + 1 < 8 and place(situation[y+1][x+2],m_color) != 'a') {
                     m_possibility.push_back(Possibility(x+2,y+1));
                 }
-                if (y - 1 >= 0){
+                if (y - 1 >= 0  and place(situation[y-1][x+2],m_color) != 'a'){
                     m_possibility.push_back(Possibility(x+2,y-1));
                 }
             }
             if (x - 2 >= 0) {
-                if (y + 1 < 8) {
+                if (y + 1 < 8 and place(situation[y+1][x-2],m_color) != 'a') {
                     m_possibility.push_back(Possibility(x-2,y+1));
                 }
-                if (y - 1 >= 0) {
+                if (y - 1 >= 0 and place(situation[y-1][x-2],m_color) != 'a') {
                     m_possibility.push_back(Possibility(x-2,y-1));
                 }
             }
             if (y + 2 < 8) {
-                if (x + 1 < 8) {
+                if (x + 1 < 8 and place(situation[y+2][x+1],m_color) != 'a') {
                     m_possibility.push_back(Possibility(x+1,y+2));
                 }
-                if (x - 1 >= 0) {
+                if (x - 1 >= 0 and place(situation[y+2][x-1],m_color) != 'a') {
                     m_possibility.push_back(Possibility(x-1,y+2));
                 }
             }
             if (y - 2 < 8) {
-                if (x + 1 < 8) {
+                if (x + 1 < 8 and place(situation[y-2][x+1],m_color) != 'a') {
                     m_possibility.push_back(Possibility(x+1,y-2));
                 }
-                if (x - 1 >= 0) {
+                if (x - 1 >= 0 and place(situation[y-2][x-1],m_color) != 'a') {
                     m_possibility.push_back(Possibility(x-1,y-2));
                 }
             }
@@ -183,62 +238,104 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
-        std::vector<Possibility> can_move() override{
+        std::vector<Possibility> can_move(short situation[8][8]) override{
+            m_possibility.clear();
+            // as bishop
             short x,y;
+            x = m_x -1;
+            y = m_y -1;
+            char check = place(situation[y][x],m_color);
+            while (x>=0 and y >=0 and check != 'a'){
+                m_possibility.push_back(Possibility(x,y));
+                if (check == 'c'){
+                    break;
+                }
+                x--;
+                y--;
+                check = place(situation[y][x],m_color);
+            }
+            x = m_x -1;
+            y = m_y + 1;
+            check = place(situation[y][x],m_color);
+            while (x>=0 and y <8 and check != 'a'){
+                m_possibility.push_back(Possibility(x,y));
+                if (check == 'c'){
+                    break;
+                }
+                x--;
+                y++;
+                check = place(situation[y][x],m_color);
+            }
+            x = m_x + 1;
+            y = m_y - 1;
+            check = place(situation[y][x],m_color);
+            while (x<8 and y >=0 and check != 'a'){
+                m_possibility.push_back(Possibility(x,y));
+                if (check == 'c'){
+                    break;
+                }
+                x++;
+                y--;
+                check = place(situation[y][x],m_color);
+            }
+            x = m_x + 1;
+            y = m_y + 1;
+            check = place(situation[y][x],m_color);
+            while (x<8 and y <8 and check != 'a'){
+                m_possibility.push_back(Possibility(x,y));
+                if (check == 'c'){
+                    break;
+                }
+                x++;
+                y++;
+                check = place(situation[y][x],m_color);
+            }
+            // as rook
             x = m_x + 1;
             y = m_y;
-            while (x < 8){
+            check = place(situation[y][x],m_color);
+            while (x < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if(check == 'c'){
+                    break;
+                }
                 x++;
+                check = place(situation[y][x],m_color);
             }
             x = m_x - 1;
             y = m_y;
-            while (x >= 0){
+            check = place(situation[y][x],m_color);
+            while (x >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if(check == 'c'){
+                    break;
+                }
                 x--;
+                check = place(situation[y][x],m_color);
             }
             x = m_x;
             y = m_y + 1;
-            while (y < 8){
+            check = place(situation[y][x],m_color);
+            while (y < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if(check == 'c'){
+                    break;
+                }
                 y++;
+                check = place(situation[y][x],m_color);
             }
             x = m_x;
             y = m_y - 1;
-            while (y >= 0){
+            check = place(situation[y][x],m_color);
+            while (y >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if(check == 'c'){
+                    break;
+                }
                 y--;
+                check = place(situation[y][x],m_color);
             }
-            x = m_x -1;
-            y = m_y -1;
-            while (x>=0 and y >=0){
-                m_possibility.push_back(Possibility(x,y));
-                x--;
-                y--;
-            }
-            x = m_x -1;
-            y = m_y + 1;
-            while (x>=0 and y <8){
-                m_possibility.push_back(Possibility(x,y));
-                x--;
-                y++;
-            }
-
-            x = m_x + 1;
-            y = m_y - 1;
-            while (x<8 and y >=0){
-                m_possibility.push_back(Possibility(x,y));
-                x++;
-                y--;
-            }
-
-            x = m_x + 1;
-            y = m_y + 1;
-            while (x<8 and y <8){
-                m_possibility.push_back(Possibility(x,y));
-                x++;
-                y++;
-            }
+            std::cout << m_possibility.size() << std::endl;
             return m_possibility;
         }
     };
@@ -255,31 +352,51 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
-        std::vector<Possibility> can_move() override{
+        std::vector<Possibility> can_move(short situation[8][8]) override{
             short x,y;
             x = m_x + 1;
             y = m_y;
-            while (x < 8){
+            char check = place(situation[y][x],m_color);
+            while (x < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if(check == 'c'){
+                    break;
+                }
                 x++;
+                check = place(situation[y][x],m_color);
             }
             x = m_x - 1;
             y = m_y;
-            while (x >= 0){
+            check = place(situation[y][x],m_color);
+            while (x >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if(check == 'c'){
+                    break;
+                }
                 x--;
+                check = place(situation[y][x],m_color);
             }
             x = m_x;
             y = m_y + 1;
-            while (y < 8){
+            check = place(situation[y][x],m_color);
+            while (y < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if(check == 'c'){
+                    break;
+                }
                 y++;
+                check = place(situation[y][x],m_color);
             }
             x = m_x;
             y = m_y - 1;
-            while (y >= 0){
+            check = place(situation[y][x],m_color);
+            while (y >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y));
+                if(check == 'c'){
+                    break;
+                }
                 y--;
+                check = place(situation[y][x],m_color);
             }
             return m_possibility;
         }
@@ -297,7 +414,7 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
-        std::vector<Possibility> can_move() override{
+        std::vector<Possibility> can_move(short situation[8][8]) override{
             short x,y;
             x = m_x;
             y = m_y;
@@ -341,7 +458,7 @@ namespace chess{
             }
             m_visual.setTexture(m_image);
         }
-        std::vector<Possibility> can_move() override{
+        std::vector<Possibility> can_move(short situation[8][8]) override{
             short x,y;
             x = m_x;
             y = m_y;
