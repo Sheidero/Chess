@@ -334,7 +334,6 @@ namespace chess{
         sf::Texture m_image;
     public:
         Rook(bool color, short x, short y) : Figures(color, x, y){
-            m_possibility.clear();
             if (color){
                 m_type = 3;
                 m_image.loadFromFile("../res/images/rook1.png");
@@ -346,6 +345,7 @@ namespace chess{
             m_visual.setTexture(m_image);
         }
         std::vector<Possibility> can_move(short situation[8][8]) override{
+            m_possibility.clear();
             short x,y;
             x = m_x + 1;
             y = m_y;
@@ -414,37 +414,37 @@ namespace chess{
             short x,y;
             x = m_x;
             y = m_y;
-            char check = place(situation[y][x],m_color);
+            char check = place(situation[y][x+1],m_color);
             if (x + 1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x+1,y));
             }
-            check = place(situation[y][x],m_color);
+            check = place(situation[y+1][x+1],m_color);
             if (x + 1 < 8 and y +1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x+1,y+1));
             }
-            check = place(situation[y][x],m_color);
-            if (y + 1 >= 0 and check != 'a'){
+            check = place(situation[y+1][x],m_color);
+            if (y + 1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y+1));
             }
-            check = place(situation[y][x],m_color);
+            check = place(situation[y+1][x-1],m_color);
             if (x - 1 >= 0 and y+1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x-1,y +1));
             }
-            check = place(situation[y][x],m_color);
+            check = place(situation[y][x-1],m_color);
             if (x - 1 >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x-1,y));
             }
-            check = place(situation[y][x],m_color);
+            check = place(situation[y-1][x-1],m_color);
             if (x - 1 >=0 and y -1 >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x-1,y-1));
             }
-            check = place(situation[y][x],m_color);
+            check = place(situation[y-1][x],m_color);
             if (y - 1 >= 0 and check != 'a'){
                 m_possibility.push_back(Possibility(x,y-1));
             }
-            check = place(situation[y][x],m_color);
+            check = place(situation[y-1][x+1],m_color);
             if (y-1 >= 0 and x + 1 < 8 and check != 'a'){
-                m_possibility.push_back(Possibility(x+1,y));
+                m_possibility.push_back(Possibility(x+1,y-1));
             }
             return m_possibility;
         }
