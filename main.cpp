@@ -137,11 +137,12 @@ int main() {
                                 if (choose){
                                     figures[py][px] = cur_piece;
                                     possibility = {};
-                                    cur_piece->Set_coord(px,py);
                                     figures[cur_piece->Get_y()][cur_piece->Get_x()] = nullptr;
-                                    situation[px][py] = cur_piece->Get_type();
+                                    situation[py][px] = cur_piece->Get_type();
                                     std::cout << cur_piece->Get_type() << std::endl;
-                                    situation[cur_piece->Get_x()][cur_piece->Get_y()] = 0;
+                                    situation[cur_piece->Get_y()][cur_piece->Get_x()] = 0;
+                                    cur_piece->Set_coord(px,py);
+
                                     flag++;
                                     chess::hodi(situation);
                                 }
