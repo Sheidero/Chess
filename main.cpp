@@ -15,6 +15,7 @@ int main() {
     back.loadFromFile("../res/images/background.jpg");
     sf::Sprite background(back);
     background.setScale(2.2,2.2);
+
     chess::Rook rookb1(false,0,0);
     figures[0][0] = &rookb1;
     chess::Horse horseb1(false,1,0);
