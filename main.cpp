@@ -11,7 +11,10 @@
 int main() {
 
     std::vector<std::vector<chess::Figures*>> figures(8, std::vector<chess::Figures*>(8));
-
+    sf::Texture back;
+    back.loadFromFile("../res/images/background.jpg");
+    sf::Sprite background(back);
+    background.setScale(2.2,2.2);
     chess::Rook rookb1(false,0,0);
     figures[0][0] = &rookb1;
     chess::Horse horseb1(false,1,0);
@@ -80,7 +83,7 @@ int main() {
 
     sf::RectangleShape koob;
     koob.setSize({100,100});
-    koob.setPosition(1500,300);
+    koob.setPosition(1400,250);
 
     // 0 - пусто, 1 - Короли, 2 - Ферзи, 3 - Ладьи, 4 - Слоны, 5 - Кони, 6 - пешки
     short situation[8][8] = {{-3,-5,-4,-2,-1,-4,-5,-3},\
@@ -114,6 +117,7 @@ int main() {
         sf::Event event;
 
         window.clear();
+        window.draw(background);
         deck.draw(window);
         while (window.pollEvent(event))
         {
@@ -175,6 +179,7 @@ int main() {
         else{
             koob.setFillColor(sf::Color::Black);
         }
+
         window.draw(koob);
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
