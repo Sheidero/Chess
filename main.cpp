@@ -9,6 +9,7 @@
 
 
 int main() {
+
     std::vector<std::vector<chess::Figures*>> figures(8, std::vector<chess::Figures*>(8));
 
     chess::Rook rookb1(false,0,0);
@@ -77,6 +78,10 @@ int main() {
     chess::Rook rookw2(true,7,7);
     figures[7][7] = &rookw2;
 
+    sf::RectangleShape koob;
+    koob.setSize({100,100});
+    koob.setPosition(1500,300);
+
     // 0 - пусто, 1 - Короли, 2 - Ферзи, 3 - Ладьи, 4 - Слоны, 5 - Кони, 6 - пешки
     short situation[8][8] = {{-3,-5,-4,-2,-1,-4,-5,-3},\
     {-6,-6,-6,-6,-6,-6,-6,-6},\
@@ -100,6 +105,7 @@ int main() {
     short flag = 1;
     bool choose;
     chess::Figures* cur_piece;
+    // position of mouse
     sf::Vector2i localPosition;
     short px;
     short py;
@@ -163,7 +169,13 @@ int main() {
             }
         }
 
-
+        if (flag % 2 == 1){
+            koob.setFillColor(sf::Color::White);
+        }
+        else{
+            koob.setFillColor(sf::Color::Black);
+        }
+        window.draw(koob);
         for (int i = 0; i < 8; i++){
             for (int j = 0; j < 8; j++){
                 if (figures[i][j] != nullptr)

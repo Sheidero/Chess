@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "../inc/log.hpp"
+#include "../inc/game.hpp"
 namespace chess{
     class Possibility{
     private:
@@ -45,17 +46,6 @@ namespace chess{
         short m_y;
         // 27
         std::vector<Possibility> m_possibility;
-        char place(short el, bool color){
-            if (((el > 0) == color) and el != 0){
-                // фигура совпадает цветом
-                return 'a';
-            }
-            if (el == 0){
-                return 'b';
-            }
-            // фигура не совпадает цветом, после неё остановиться
-            return 'c';
-        }
     public:
         Figures(){};
         Figures(bool& color, short& x, short& y){
@@ -87,6 +77,18 @@ namespace chess{
             return m_visual;
         }
         virtual std::vector<Possibility> can_move(short situation[8][8]){};
+
+        char static place(short el, bool color){
+            if (((el > 0) == color) and el != 0){
+                // фигура совпадает цветом
+                return 'a';
+            }
+            if (el == 0){
+                return 'b';
+            }
+            // фигура не совпадает цветом, после неё остановиться
+            return 'c';
+        }
     };
 
     class Bishop: virtual public Figures{
@@ -154,7 +156,14 @@ namespace chess{
                 y++;
                 check = place(situation[y][x],m_color);
             }
-            std::cout << m_possibility.size() << std::endl;
+            for (int i = 0; i < m_possibility.size(); i++){
+                if (chess::shakh(situation,m_color)){
+                    continue;
+                }
+                else{
+                    m_possibility.erase(m_possibility.begin() + i);
+                }
+            }
             return m_possibility;
         }
     };
@@ -208,6 +217,14 @@ namespace chess{
                 }
                 if (x - 1 >= 0 and place(situation[y-2][x-1],m_color) != 'a') {
                     m_possibility.push_back(Possibility(x-1,y-2));
+                }
+            }
+            for (int i = 0; i < m_possibility.size(); i++){
+                if (chess::shakh(situation,m_color)){
+                    continue;
+                }
+                else{
+                    m_possibility.erase(m_possibility.begin() + i);
                 }
             }
             return m_possibility;
@@ -326,7 +343,14 @@ namespace chess{
                 y--;
                 check = place(situation[y][x],m_color);
             }
-            std::cout << m_possibility.size() << std::endl;
+            for (int i = 0; i < m_possibility.size(); i++){
+                if (chess::shakh(situation,m_color)){
+                    continue;
+                }
+                else{
+                    m_possibility.erase(m_possibility.begin() + i);
+                }
+            }
             return m_possibility;
         }
     };
@@ -392,6 +416,14 @@ namespace chess{
                 y--;
                 check = place(situation[y][x],m_color);
             }
+            for (int i = 0; i < m_possibility.size(); i++){
+                if (chess::shakh(situation,m_color)){
+                    continue;
+                }
+                else{
+                    m_possibility.erase(m_possibility.begin() + i);
+                }
+            }
             return m_possibility;
         }
     };
@@ -446,6 +478,14 @@ namespace chess{
             check = place(situation[y-1][x+1],m_color);
             if (y-1 >= 0 and x + 1 < 8 and check != 'a'){
                 m_possibility.push_back(Possibility(x+1,y-1));
+            }
+            for (int i = 0; i < m_possibility.size(); i++){
+                if (chess::shakh(situation,m_color)){
+                    continue;
+                }
+                else{
+                    m_possibility.erase(m_possibility.begin() + i);
+                }
             }
             return m_possibility;
         }
@@ -518,6 +558,14 @@ namespace chess{
                 if (y + 1 <= 7 and x + 1 < 8 and check == 'c')
                 {
                     m_possibility.push_back(Possibility(x + 1, y + 1));
+                }
+            }
+            for (int i = 0; i < m_possibility.size(); i++){
+                if (chess::shakh(situation,m_color)){
+                    continue;
+                }
+                else{
+                    m_possibility.erase(m_possibility.begin() + i);
                 }
             }
             return m_possibility;
